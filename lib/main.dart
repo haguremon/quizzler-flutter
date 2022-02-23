@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
+
 void main() => runApp(Quizzler());
 
 // ignore: use_key_in_widget_constructors
@@ -28,11 +32,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> socreKeeper = [];
-  List<String> questions = [
-    'You can lead a cow down stairs but not up stairs.',
-    'Approximately one quarter of human bones are in the feet.',
-    'A slug\'s blood is green.',
-  ];
+
   int questionNnmber = 0;
 
   @override
@@ -44,12 +44,12 @@ class _QuizPageState extends State<QuizPage> {
         Expanded(
           flex: 5,
           child: Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questions[questionNnmber],
+               quizBrain.qAndaList[questionNnmber].questionText,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25.0,
                   color: Colors.white,
                 ),
@@ -77,15 +77,30 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  socreKeeper.add(
-                    const Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ),
-                  );
+                  // socreKeeper.add(
+                  //   const Icon(
+                  //     Icons.check,
+                  //     color: Colors.green,
+                  //   ),
+                  // );
+                  bool correctAnswer = quizBrain.qAndaList[questionNnmber].questionAnswer;
+                  if (correctAnswer == true) {
+                    socreKeeper.add(
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
+                    );
+                  } else {
+                    socreKeeper.add(
+                      const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+                    );
+                  }
                   questionNnmber++;
                 });
-                print('true');
                 //The user picked true.
               },
             ),
@@ -111,8 +126,23 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
+                    bool correctAnswer = quizBrain.qAndaList[questionNnmber].questionAnswer;
+                  if (correctAnswer == false) {
+                    socreKeeper.add(
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
+                    );
+                  } else {
+                    socreKeeper.add(
+                      const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+                    );
+                  }
                   questionNnmber++;
-                  print('false');
                 });
 
                 //The user picked false.
