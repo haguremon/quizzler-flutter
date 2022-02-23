@@ -8,6 +8,8 @@ void main() => runApp(Quizzler());
 
 // ignore: use_key_in_widget_constructors
 class Quizzler extends StatelessWidget {
+  //QuizzlerはStatelessWidgetを継承して
+  //StatelessWidgetのbuild関数をオーバライドする
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,15 +28,13 @@ class Quizzler extends StatelessWidget {
 
 // ignore: use_key_in_widget_constructors, must_be_immutable
 class QuizPage extends StatefulWidget {
-  @override
-  _QuizPageState createState() => _QuizPageState();
+  //QuizPageは状態変化するのもの的な認識のStatefulWidgetを継承して
+  @override // State createState();
+  _QuizPageState createState() => _QuizPageState(); //変更可能な状態を作成
 }
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> socreKeeper = [];
-
-  int questionNnmber = 0;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,7 +47,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-               quizBrain.qAndaList[questionNnmber].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 25.0,
@@ -77,13 +77,11 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  // socreKeeper.add(
-                  //   const Icon(
-                  //     Icons.check,
-                  //     color: Colors.green,
-                  //   ),
-                  // );
-                  bool correctAnswer = quizBrain.qAndaList[questionNnmber].questionAnswer;
+                  bool correctAnswer = quizBrain.getQuestionAnswer();
+
+                  //カプセルかしないと下のようになる可能性もある
+                  //quizBrain.qAndaList[questionNnmber].questionAnswer = true;
+
                   if (correctAnswer == true) {
                     socreKeeper.add(
                       const Icon(
@@ -99,7 +97,7 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                     );
                   }
-                  questionNnmber++;
+                  quizBrain.nextQuestions();
                 });
                 //The user picked true.
               },
@@ -126,7 +124,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                    bool correctAnswer = quizBrain.qAndaList[questionNnmber].questionAnswer;
+                  bool correctAnswer = quizBrain.getQuestionAnswer();
                   if (correctAnswer == false) {
                     socreKeeper.add(
                       const Icon(
@@ -142,7 +140,7 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                     );
                   }
-                  questionNnmber++;
+                  quizBrain.nextQuestions();
                 });
 
                 //The user picked false.
