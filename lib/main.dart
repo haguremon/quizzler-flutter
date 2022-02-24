@@ -39,16 +39,17 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> socreKeeper = [];
 
-var alertStyle = AlertStyle(
-  animationType: AnimationType.fromTop,
+AlertStyle alertStyle = AlertStyle(
+  animationType: AnimationType.fromBottom,
   isCloseButton: false,
   isOverlayTapDismiss: false,
   descStyle: const TextStyle(
     fontWeight: FontWeight.normal,
     fontSize: 15,
+    fontFamily: 'NotoSerifJP',
     ),
   descTextAlign: TextAlign.start,
-  animationDuration: const Duration(milliseconds: 400),
+  animationDuration: const Duration(milliseconds: 300),
   alertBorder: RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(0.0),
     side: const BorderSide(
@@ -59,19 +60,11 @@ var alertStyle = AlertStyle(
     color: Colors.red,
     fontWeight: FontWeight.bold,
     fontSize: 25,
+    fontFamily: 'ReggaeOne',
   ),
-  alertAlignment: Alignment.topCenter,
+  alertAlignment: Alignment.center,
 );
 
-  // List<Expanded> createSocreKeeper() {
-  //   List<Expanded> expandedsocreKeeper = [];
-  //   socreKeeper.forEach((element) {
-  //     expandedsocreKeeper.add(Expanded(
-  //       child: element,
-  //     ));
-  //   });
-  //   return expandedsocreKeeper;
-  // }
   // ignore: unused_field
   int _scorecount = 0;
   void checkAnswer(bool userPickedAnswer) {
