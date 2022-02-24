@@ -46,10 +46,13 @@ class QuizBrain {
 
   void nextQuestions() {
     //_questionNnmbeｒの数が_qAndaList.lengthより大きい時だけインクリメントされる
-    print(_questionNnmber);
 
     if (_questionNnmber < _qAndaList.length - 1) {
       _questionNnmber++; //_questionNnmber != 13
     }
+  }
+
+  void restartQuestions() {
+    _questionNnmber = 0;
   }
 }

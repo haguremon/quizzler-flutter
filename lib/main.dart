@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'quiz_brain.dart';
 
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 QuizBrain quizBrain = QuizBrain();
+
 
 void main() => runApp(Quizzler());
 
@@ -17,7 +20,7 @@ class Quizzler extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: QuizPage(),
           ),
         ),
@@ -35,6 +38,104 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> socreKeeper = [];
+
+var alertStyle = AlertStyle(
+  animationType: AnimationType.fromTop,
+  isCloseButton: false,
+  isOverlayTapDismiss: false,
+  descStyle: const TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 15,
+    ),
+  descTextAlign: TextAlign.start,
+  animationDuration: const Duration(milliseconds: 400),
+  alertBorder: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(0.0),
+    side: const BorderSide(
+      color: Colors.grey,
+    ),
+  ),
+  titleStyle: const TextStyle(
+    color: Colors.red,
+    fontWeight: FontWeight.bold,
+    fontSize: 25,
+  ),
+  alertAlignment: Alignment.topCenter,
+);
+
+  // List<Expanded> createSocreKeeper() {
+  //   List<Expanded> expandedsocreKeeper = [];
+  //   socreKeeper.forEach((element) {
+  //     expandedsocreKeeper.add(Expanded(
+  //       child: element,
+  //     ));
+  //   });
+  //   return expandedsocreKeeper;
+  // }
+  // ignore: unused_field
+  int _scorecount = 0;
+  void checkAnswer(bool userPickedAnswer) {
+    if (socreKeeper.length == 13) {
+      Alert(
+        context: context,
+        title: 'Score\n$_scorecount/13',
+        style: alertStyle,
+        desc: "最後の問題が終わりました。どちらかを選択してください",
+        buttons: <DialogButton>[
+          DialogButton(
+            child: const Center(
+              child: Text(
+                "リスタート",
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                socreKeeper = [];
+                _scorecount = 0;
+                quizBrain.restartQuestions();
+              });
+              Navigator.pop(context);
+            },
+            gradient: const LinearGradient(colors: [
+              Color.fromRGBO(116, 116, 191, 1.0),
+              Color.fromRGBO(52, 138, 199, 1.0)
+            ]),
+          ),
+          DialogButton(
+            child: const Text(
+              "キャンセル",
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+            onPressed: () => Navigator.pop(context),
+            color: Colors.red,
+          )
+        ],
+      ).show();
+      return;
+    }
+    bool correctAnswer = quizBrain.getQuestionAnswer();
+    setState(() {
+      if (correctAnswer == userPickedAnswer) {
+        _scorecount++;
+        socreKeeper.add(
+          const Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        socreKeeper.add(
+          const Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      }
+      quizBrain.nextQuestions();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -76,29 +177,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  bool correctAnswer = quizBrain.getQuestionAnswer();
-
-                  //カプセルかしないと下のようになる可能性もある
-                  //quizBrain.qAndaList[questionNnmber].questionAnswer = true;
-
-                  if (correctAnswer == true) {
-                    socreKeeper.add(
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  } else {
-                    socreKeeper.add(
-                      const Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  }
-                  quizBrain.nextQuestions();
-                });
+                checkAnswer(true);
                 //The user picked true.
               },
             ),
@@ -123,32 +202,15 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  bool correctAnswer = quizBrain.getQuestionAnswer();
-                  if (correctAnswer == false) {
-                    socreKeeper.add(
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  } else {
-                    socreKeeper.add(
-                      const Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  }
-                  quizBrain.nextQuestions();
-                });
-
+                checkAnswer(false);
                 //The user picked false.
               },
             ),
           ),
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: socreKeeper,
         )
       ],
